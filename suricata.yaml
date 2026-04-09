@@ -1,0 +1,45 @@
+%YAML 1.1
+---
+# Minimal Suricata config for Docker
+
+vars:
+  address-groups:
+    HOME_NET: "[192.168.0.0/16]"
+
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert
+        - dns
+        - http
+        - tls
+        - files
+        - ssh
+
+logging:
+  default-log-level: info
+  outputs:
+    - console:
+        enabled: yes
+
+# Disable af-packet to avoid docker issues
+af-packet: []
+
+# Use pcap instead of af-packet
+pcap:
+  - interface: any
+    threads: 1
+
+detect-engine:
+  profile: medium
+
+rule-files:
+  - /etc/suricata/rules/suricata.rules
+
+app-layer:
+  protocols:
+    mqtt:
+      enabled: yes
